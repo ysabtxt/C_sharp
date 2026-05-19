@@ -1,0 +1,50 @@
+// Create a class named Hero with two private fields named life an in and mana a double. Each field has its own property for validatiing 
+and retrieving its value. It has a constructor with parameters to initialize its fields
+
+conditions: set accessor
+life: 100 to 250
+mana ; 200 to 350
+
+create a method that will display additional information about the hero character
+---------------------------------
+using System;
+
+class Hero{
+  int life;
+  double mana;
+
+  public Hero (int life, double mana){
+  this.life = life;
+  this.mana = mana;
+}
+
+  public int Life{
+  set {
+    if(value >= 100 && value <=250){
+      life = value;
+    }
+  }
+  get {
+      return life;
+    }
+  }
+
+public double Mana{
+  set {
+    if(value >= 200 && value <=350){
+      mana = value;
+    }
+  }
+  get {
+      return mana;
+    }
+  }
+
+  public void HeroInfo(string heroName){
+    Random rand = new Random();
+    Console.WriteLine("Name: " + heroName);
+    string[] heroClass = {"Mage", "Wwarior","Rogue"};
+    COnsole.WriteLine("Class: " + heroClass[rand.Next(0,3)]);
+    Console.WriteLine("Life" + life + "\n Mana: " + mana);
+  }
+}
