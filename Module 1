@@ -1,0 +1,82 @@
+using System; //namespace; it allows to write console class
+
+public class TestProgram{
+  static void Main (string[] args){ //this method serves as entry point
+    Console.WriteLine("Hello World"); 
+    Console.ReadKey();
+
+  }
+
+}
+
+// static means it only belong to the class itself
+// void means it does not return any value
+// console.writeline adds new line at the end
+//console.write does not add new line at the end, dere deretso lang sya
+//console.readkey inaantay niya na mag press yung user ng any key
+
+/* 
+Different main method format:
+1. static void Main (string[] args) - access to user input from the command line
+2. static void Main () - No command-line arguments are accepted.
+3. static int Main () - have return statement; add return 0 to validate the int
+4. static int Main (string[] args) - accepts command line prompt nd int return value
+*\
+
+/* 
+Identifiers - must start with letter or underscore, cant contain spaces or special character, case sensitive
+*\
+
+/* Data types:
+Integral - sbyte(8), short(16), long(64), int (32) (whole numbers, accepts posi and nega values)
+        -byte(8), ushort(16), uint(32), ulong(64) (only accepts positive values
+Floating-Point - float(32), double(64)
+High precision decimal- decimal(128)
+boolean- bool(true or false)
+character - char(16) ' '; single line characters
+String - string " "; multi line characters
+*\
+
+// Typecast- para mabago ung value at ma accept ang different data type; ilalagay sa loob ng parenthesis kung anong data type ng asa left
+/*
+short to sbyte = di pwede kasi mas mataas capacity ni short kesa sbyte
+b = (sbyte) s; //pwede kasi na typecast si s
+i = (int) l
+--dapat mas higher ang value ng asa left para wala na typecast
+*\
+
+/*
+float f= 10.75f; // adds f kasi by default double sya without f; kaya nilagay yung f para mapanindigan na float sya
+double d = 20.85d;
+
+Any integral type can be assigned to any float type, doesnt matter yung memory capacity. float type mataas memory capacity kaya oks lang.
+*\
+
+/*
+decimal d = 10.55M; postfix M, only accepts directly an integral value or decimal value
+char c = '\u0063' ; para pwede unicode character
+string n = "thena"; ("name: "+ n) | ang output niya ay "name: thena" 
+*\
+
+
+/* operators
+Arithmetic : +, -, *, /, %
+1st: *, /, % -> same equivalent sila lahat, depends sino mauuna L to R
+2nd: +, - -> L to R
+
+Conditional: <, >, !=, ==, <=, >=
+Logical: &&, ||, !, &, |, ^
+- &&/ || if true yung nasa left, matik di na gagalawin asa right
+- &/| eexecute left and right values
+- xor (^) different = T ; same = F
+
+post fix - increse/decrease the value later pa
+pre fix - increse/decrease the value agad
+
+Bitwise : &, |, ~, >>, <<. ^ (binary values)
+- ~ pag positive to negative : increment value then make sign nega
+- pag negative to positive : decrement value then make the sign positive
+
+>> and << : kung san nakaturo, doon direction ng pag usog
+- convert to binary; number >> positions
+*\
