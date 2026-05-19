@@ -1,0 +1,130 @@
+class structure
+<access modifier> class ClassName{
+  <fields> // variable declared inside of a class by the method/constructor ; optional
+  <constructor> // optional
+  <property> // optional
+}
+
+field structure
+<access modifier> typeOfData fieldName [value];
+
+property structure
+<access modifier> typeOfData PropertyName{ // acessmodifier is private; same typeOfData sa return ng data;
+  set{} //assign
+  get{}//retrieve value
+
+} //set n get is required
+
+Methods Structure
+<access modifier>* returnType MethodName(parameters*){
+statements;
+}
+
+access modifer default - internal
+int default - 0
+bool default - false
+char default - null
+------------------------------------------
+using System;
+public class Dog {
+  static void Main(){
+      Dog d= new Dog(); // use heap memory
+      Console.Write(d);
+  }
+}
+-----------------------------------------
+using System;
+internal class Dog{
+  public int age;
+  internal string color;
+}
+
+using System;
+public class TestDog {
+  static void Main(){
+      Dog d= new Dog(); // use heap memory
+      d.age = 20;
+      d.color = "brown";
+      Console.Write(d.age + " " + d.color);
+  }
+}
+---------------------------------------
+access modifier:
+private -  can be accessed only in the same class
+public - accessed anywhere
+
+---------------------------------------
+encapsulation n property
+using System;
+internal class Dog{
+  public int age;
+  private string color;
+
+  public string Color{ // this is a property
+    set{
+      if (value == "White" || value == "Brown"){
+        color = value;
+      }
+    }
+    get{
+        return color;
+    }
+  }
+}
+
+using System;
+public class TestDog {
+  static void Main(){
+      Dog d= new Dog(); 
+      d.age = 20;
+      d.Color = "White";
+      Console.Write(d.age + " " + d.color);
+  }
+}
+
+------------------
+this- similarities between keywords in a class
+- to remove similarities sa keywords ng constructor and methods 
+
+-----------------------------------------
+public void Play(string[] games){
+  foreach(string g in games){
+      Console.Writeline(g);
+  }
+}
+
+using System;
+class TestAgd{
+    static void Main(){
+    string [] laro ={"marvelrivals", "valo", "csgo"};
+    a.Play(laro)
+    }
+}
+
+=> marvelrivals
+valo
+csago
+
+-------------------------
+public string Play(string[] games){
+  Random r = new Random();
+  int sel = r.Next(0, games.Length); // 0 sets the initialization na sa umpisa ung start
+  return games[sel];
+  foreach(string g in games){
+      Console.Writeline(g);
+  }
+}
+
+using System;
+class TestAgd{
+    static void Main(){
+    string [] laro ={"marvelrivals", "valo", "csgo"};
+    string selectedGame = a.Play (laro);
+    Console.Write(selectedGame)
+    }
+}
+
+=> (randomizes answr) 
+marvelrivals
+valo
+csago
