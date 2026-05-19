@@ -1,0 +1,101 @@
+using System;
+
+class testException{
+    static void Main(){
+      int num=0;
+      try{
+        Console.Write ("enter num: ");
+        num = int.Parse(Console.ReadLine());
+      }catch(FormatException exc){
+        Console.WriteLine("Invalid Input");
+      }
+        Console.Write("number is " +num);
+    }
+
+}
+-------------------------------
+using System;
+
+class testException{
+    static void Main(){
+      int num=0, div=0, result=0;
+      try{
+        Console.Write ("enter num: ");
+        num = int.Parse(Console.ReadLine());
+        Console.Write ("enter num: ");
+        div = int.Parse(Console.ReadLine());
+        result = num/div;
+      }catch(FormatException exc){
+        Console.WriteLine("Invalid Input");
+      }
+        Console.Write("number is " + result);
+    }
+
+}
+----------------
+Try-Catch
+
+Format 1
+try{
+ //statements
+}catch(Exception exc){
+ // statements
+}
+
+Format 2: multiple catch block
+try{
+ //statements
+}catch(Exception exc){ // superclass
+ // statements
+}catch(Exception exc){ // subclass
+ // statements
+finally : executed may exception man o wala
+
+ -----------------------
+ format 2 ex:
+ using System;
+
+class testException{
+    static void Main(){
+      int num=0, div=0, result=0;
+      try{
+        Console.Write ("enter num: ");
+        num = int.Parse(Console.ReadLine());
+        Console.Write ("enter num: ");
+        div = int.Parse(Console.ReadLine());
+        result = num/div;
+      }catch(FormatException){
+        Console.WriteLine(exc.Message);
+      }catch(DivideByZero){
+        Console.WriteLine("exc 2");
+      }
+        Console.Write("number is " + result);
+    }
+
+}
+
+--------------------------------------------
+
+ using System;
+
+class testException{
+    static void Main(){
+      int num=0, div=0, result=0;
+      try{
+        Console.Write ("enter num: ");
+        num = int.Parse(Console.ReadLine());
+        Console.Write ("enter num: ");
+        div = int.Parse(Console.ReadLine());
+        result = num/div;
+          if(result < 0){
+          throw new Exception(); //throws to proper catch block
+          }
+      }catch(FormatException){
+        Console.WriteLine(exc.Message);
+      }catch(DivideByZero){
+        Console.WriteLine("exc 2");
+      }
+        Console.Write("number is " + result);
+    }
+
+}
