@@ -1,0 +1,29 @@
+using System;
+
+class Animal{ // class with no main method is object class
+}
+
+class Animal{
+	public Animal(int age){} //error dahil kailangan may int na value sa TestAnimal na class
+}
+
+class TestAnimal{
+	static void Main(){
+		Animal a1 = new Animal();
+		Animal a2 = new Animal();
+		if (a1 == a2){//not comparing the type, ung address ung cinocompare
+			Console.Write("tx21");
+		}else{
+			Console.Write("gd1");
+		}
+
+	}
+}
+=> output is gd1; everytime na may new word nag aallocate sya ng new memory sa heap location
+
+class Animal{
+	int age;
+	public Animal(int age){
+		this.age= age;
+	}
+}
