@@ -1,0 +1,151 @@
+ start = add reference then go to assembly, check system, system.drawing, system.windows.forms
+system.drawing - position, image color, structure
+system - main
+system.windows.forms - forms itself
+wrench symbol - property
+lighting symbol- event
+pink box - method
+bounds - kasama pati location
+form - main container of gui
+
+Button -
+Label - display msgs
+TextBox - input msgs
+CheckBox - enable disable options; pede able lahat ng options
+RadioButton - select only 1
+ComboBox - dropdown
+Listbox - u can see all the options
+PictureBox - 
+
+para makita file, right click then click file in folfer then bin >> debug
+using System;
+namespace TX22_Module_5_GUI{
+  internal class MyForm{
+    Form f;
+    Button b1;
+    Label l1;
+    TextBox tb1;
+    CheckBox cb1;
+    int ctr;
+    random rand;
+
+    public MyForm(){
+      f = new Form();
+      b1 = new Button();
+      l1 = new Label();
+      tb1 = new TextBox();
+      ctr = 0;
+    }
+
+    public void launchForm(){
+    f.StartPosition = FormStartPosition.CenterParent; // centers the form
+    f.Size = new Size(700, 400); // 700 width, 400 height
+    f.Text = "TX22"; // change name of tab
+    f.BackColor = Color.CornFlowerBlue;
+    f.MinimizeBox = false; //disabled minimized button
+    f.MaximizeBox = false; //disable max button
+    // = if both minimize and maximize is disabled, wala na sila sa title bar
+    f.BackgroundImage = Image.FromFile("imgname") //image is abstract class 
+    f.BackgroundImageLayout = ImageLayout.Stretch; // kung ano size ng image; auto fit
+    //ImageLayout.Tile - pang maramihan
+    //ImageLayout.Center - asa center
+    f.FormBorderStyle = f.FormBorderStyle.Fixed3D; //non resizable
+
+//button
+
+    b1.Size = new Size (100, 30);
+    b1.Location = new Point(0, 20) // repositions button inside the form
+    // move to left : x, move down : y, change size: w and h
+    //                         x    y   w   h
+    b1.Bounds = new Rectangle (30, 30, 100, 30)// allows to position and resize gui
+    b1.BackColor = Color.Black;
+    b1.Text = "hi";
+    b1.Font = new Font("Arial", 20, FontStyle.Bold);
+    // to left, to down minus
+    // to right, to up add
+    // if want magtabi ng button : add x and width, yon position sa x then same sa y
+    // if want sa baba, copy xwh, add y and h ng prev button (lagay sa y)
+    b1.Click += b1_Click; // creates event
+    b1.MouseHover += b1_MouseHover;
+    b1.MouseMove += F_MouseMove;
+    b1.MouseDown += F_MouseDown;
+
+//Labels
+     l1.Bounds = new Rectangle (30, 30, 100, 30)
+      l1.text = "lol";
+    l1.Font = new Font("Algerian", 20, FontStyle.Italic);
+    l1.ForeColor = Color.White;
+    l1.BackColor = Color.Yellow;
+
+//TextBox
+    tb1.text = "thena';
+    tb1.Bounds = new Rectangle (30, 30, 100, 30)
+    tb1.Font = new Font("Algerian", 20, FontStyle.Italic);
+    tb1.MultiLine = true; // para mag multiline kasi by defauot single line lang
+    tb1.ReadOnly = true; // acts as label only
+    tb1.PasswordChar = "*"; //parang encrypted ung itatype mo
+    tb1.KeyPress += Tb1_KeyPress;
+
+//CheckBox
+    cb1.bounds = new Rectangle (10, 10, 100, 20);
+    cb1.Text = "hellolworld";
+
+//RadioBox
+    rb1.Bounds = new Rectangle (30, 30, 100, 30);
+    rb1.Checked = True;
+
+//combobox
+    // pag add isa isa, pag addrange maramihan
+    cbx.Items.Add("pink");
+    cbx.Items.Add(new string[] {"green", "blue", "purple"});
+    cbx.Bounds = new Rectangle (30, 30, 100, 30);
+    cbx.SelectedIndex = 0; //automatically selects
+//listbox  ==  almost same with combobox
+// listbox is list doqn not drop down
+    lbx.ScrollAlwaysVisible = true;
+    f.Controls.Add(cbx);
+    f.Controls.Add(rb1);
+    f.Controls.Add(cb1);
+     f.Controls.Add(tb1);
+    f.Controls.Add(l1);
+    f.Controls.Add(b1); // adds button; default is at upper left corner  
+    f.ShowDialog();
+    }
+
+    private void b1_Click(object sender, EventArgs e){
+
+    f.text= "" + (ctr++);
+    }
+    private void b1_MouseHover(object sender, EventArgs e){
+    f.BackColor= Color.FromArgb(rand.Next(0,255), rand.Next(0,255), rand.Next(0,255), rand.Next(0,255),rand.Next(0,255) ); //every click nag iiba color
+    }
+     private void F_MouseMove(object sender, EventArgs e){
+    f.text= e.Location.ToString; // pinapakita location ng moveng mouse sa title bar
+    }
+    private void F_MouseDown(object sender, EventArgs e){
+      if (e.Button == Mouse.Buttons.Left){ // pag clinick sa left side maging pink bg color
+        f.BackColor = Color.Pink;
+      }
+    private void Tb1_KeyPress(object sender, EventArgs e){
+      if (!char.IsLetter(e.KeyChar) || e.KeyChar == 8){ //disregarded ang numbers and special characters
+        e.Handled = true;
+        Console.WriteLine("KeyPrfess")
+      }
+ 
+    }
+  }
+
+
+}
+
+right click >> add new project >> new item
+namespace TX22_Module_5_GUI{
+  internal class MyForm{
+    static void Main(){
+      MyForm mf = new MyForm();
+      mf.launchForm();
+    }
+  }
+}
+
+// to remove command propmpt >> go to projecty then right click tas properties then sa middle center change output type to window application
