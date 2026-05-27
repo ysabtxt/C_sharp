@@ -1,0 +1,45 @@
+start: right click then add new item
+add: right click to solution then add new project
+references: click references then add project thten add using ProjectName; para maaccess ung classes sa iba
+
+namespace TX22_Module_5_GUI{
+
+  internal class SampleAccess : Person{
+    static void Main(){
+      public sample3{
+        age = 3;
+      }  
+  }
+}
+
+
+namespace AnotherProject{
+  public class Person{
+    protected int age;
+  }
+}
+
+
+// different members
+namespace TX22_Module_5_GUI{
+
+  internal class Sample3 : Person{ // inherit person
+    static void Main(){
+      public sample3{
+        age = 3;
+      }  
+  }
+}
+
+
+namespace AnotherProject{
+  public class Person{
+    private int age;
+    private string name; // private so kailangan ng constructor: right click then click >> quick action and refactoing tas click generate 
+    //construction from members tas matik generated constructor with field variables
+
+    //for encapsulation (click encapsulate fiels but keme) expresson is lamda it means assignong returning a value to a variable==
+    public int Age { get => age; set => age = value;}
+    public string Name {get => name; set => name = value;}
+  }
+}
