@@ -1,0 +1,196 @@
+// when adding image, iadd siya sa same folder ng executable file
+
+using System;
+using System.Windows.Forms;
+using System.Drawing;
+namespace Module_5_TX21_Drawing
+{
+    internal class MyGUIApp : Form
+    {
+        PictureBox pbDrawingArea; // allows you to display multiple pics
+        int posX, posY;
+        Rectangle r1, r2;
+        Timer gameTime; // game loop concept
+        
+        public MyGUIApp()
+        {
+            pbDrawingArea = new PictureBox(); // follow mouse
+            posX = 0;
+            posY = 0;
+            r1 = new Rectangle(posX, posY, 100, 100);
+            r2 = new Rectangle(10, 120, 100, 100);
+            gameTime = new Timer();
+        }
+        public void launch()
+        {
+            Size = new Size(800, 600);
+            StartPosition = FormStartPosition.CenterScreen;
+            MaximizeBox = false;
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            Text = "My Form";
+            
+            pbDrawingArea.Bounds = new Rectangle(20, 20, 740, 520); // size ng pic box
+            pbDrawingArea.BackColor = Color.CornflowerBlue;
+            pbDrawingArea.BorderStyle = BorderStyle.Fixed3D;
+            Controls.Add(pbDrawingArea);
+            
+            pbDrawingArea.Paint += DrawingArea;
+            
+            #region Mouse Events
+            MouseEnter += ChangeSize;
+           // MouseEnter += MyGUIApp_MouseEnter;
+            MouseLeave += MyGUIApp_MouseLeave; 
+            MouseHover += MyGUIApp_MouseHover;
+            MouseDown += MyGUIApp_MouseDown;
+            MouseMove += MyGUIApp_MouseMove;
+            MouseClick += MyGUIApp_MouseClick;*/
+            #endregion
+
+            
+           pbDrawingArea.MouseMove += PbDrawingArea_MouseMove;
+          pbDrawingArea.MouseDown += PbDrawingArea_MouseDown;
+
+          //timer game
+            gameTime.Tick += GameTime_Tick;
+            gameTime.Interval = 20; // the more na mas mababa, mas mabilis
+            gameTime.Start();*/
+            ShowDialog();
+        }
+
+        // gumagalaw yung image
+        private void GameTime_Tick(object sender, EventArgs e)
+        {
+        // nagsstop pag natapos na sa right side
+            if (r1.Right <=760){
+            posX += 1; // if top to bot make it r1.Y tas palitan sa if statement from right tp bopttom
+            pbDrawingArea.Invalidate();}
+        }
+        private void PbDrawingArea_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                //r1.Location = new Point(e.X, e.Y);
+                //pbDrawingArea.Invalidate();
+            }
+        }
+
+        // eveytime na nag eexit, lumilipat sa ibang location ung pic
+        private void PbDrawingArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            //posX = e.X;
+            //posY = e.Y;
+            r1.Location = new Point(e.X-75, e.Y-50);
+            pbDrawingArea.Invalidate(); // repaint so sumusnod na sa mouse
+        }
+
+        
+        private void DrawingArea(object sender, PaintEventArgs e)
+        {
+            #region drawing primitives
+            // FillRectangle => solid shape; Bruhes => colors the shape
+            e.Graphics.FillRectangle(Brushes.Yellow, new Rectangle(10, 10, 100, 50)); 
+
+            //outlines the rectangle
+            e.Graphics.DrawRectangle(Pens.Yellow, new Rectangle(10, 70, 100, 50));
+
+            // makes crcle and outlines it
+            e.Graphics.FillEllipse(Brushes.Green, new Rectangle(10, 130, 100, 100));
+            e.Graphics.DrawEllipse(Pens.Green, new Rectangle(10, 240, 100, 100));
+
+            // makes a pie then ung numbers outside new rectangle nag dedetermine ng hati
+            e.Graphics.FillPie(Brushes.Red, new Rectangle(10, 350, 50, 50), 270, 180);
+
+            //outline ng pie na may hati
+            e.Graphics.DrawPie(Pens.Red, new Rectangle(10, 350, 50, 50), 270, 180);
+
+            // customized shape, nag coconnect yung mga new point na sinend
+            e.Graphics.FillPolygon(Brushed.Red, new Point[] {new Point(200,10), new Point(200,200), new Point(400,200)})
+            #endregion
+
+            // style 1
+            e.graphics.DrawImage(Image.FromFile("ball2.png"), new Point (10,10));
+
+            //style 2
+            e.Graphics.DrawImage(Image.FromFile("ball2.png"), new Rectangle(20, 20, 200, 200));
+
+            // para sumunod sa mouse
+            e.Graphics.DrawImage(Image.FromFile("ball2.png"), new Rectangle(posX -75, posY -50, 150, 100));
+
+            //depends sa location ni x at y
+            e.graphics.DrawImage(Image.FromFile("ball2.png"), r1));
+            
+            //style 3
+            Image img = image.FromFile("ball 2.png")
+            e.Graphics.DrawImage(img.new Rectangle, new Rectangle(20, 20, 200, 150), 
+                new Rectangle (0,0,img.Width, img.Height), GraphicsUnit.Pixel);
+
+
+            // detects if nag ooverlap, pag nag overlap mawawala sya
+            if (!r2.IntersectsWith(r1))
+            {
+                e.Graphics.DrawImage(Image.FromFile("ball2.png"), r2);
+            }
+            e.Graphics.FillPolygon(Brushes.Yellow,new Point[] {new Point(10,10),
+            new Point(10,100),new Point(200,100)});
+
+            // only checks the point
+            if (r2.contains(new Point(pos X, pos Y)){
+              e.Graphics.DrawImage(Image.FromFile("ball2.png"), r2);
+            
+            }
+            e.Graphics.DrawImage(Image.FromFile("ball1.png"), r1)
+        }
+
+
+
+        
+        #region Mouse Event Handlers
+        private void MyGUIApp_MouseClick(object sender, MouseEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        // detects location ng mouse as long as asa taas ng form
+        private void MyGUIApp_MouseMove(object sender, MouseEventArgs e)
+        {
+            Text = e.Location.ToString();
+        }
+
+        // detects pag priness ung mouse: Text = e.Location.ToString();
+        private void MyGUIApp_MouseDown(object sender, MouseEventArgs e)
+        {
+        // nag iiba yung title bar depends sa kung ano pinipindot mo sa mouse
+            if (e.Button == MouseButtons.Left)
+            {
+                Text = e.Location.ToString();
+            }
+            else
+            {
+                Text = e.Button.ToString();
+            }
+        }
+
+        // invoked when mouse enters the window
+        private void MyGUIApp_MouseEnter(object sender, EventArgs e)
+        {
+            BackColor = Color.Red;
+        }
+
+           // invoked when mouse leaves the window
+        private void MyGUIApp_MouseLeave(object sender, EventArgs e)
+        {
+            Size = new Size(800, 600);
+        }
+
+        // when mouse rest on top of the form
+          private void MyGUIApp_MouseHover(object sender, EventArgs e)
+        {
+           BackColor = Color.Pink;
+        }
+        private void ChangeSize(object sender, EventArgs e)
+        {
+            Size = new Size(400, 400);
+        }
+        #endregion
+    }
+}
