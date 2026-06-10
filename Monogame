@@ -10,6 +10,26 @@
 // to add assests -> soluions explorer -> drop down content -> content.mgcb -> riggt clck open with -> mgcb editor (if not available:Monogame pipeline tool) -> click ok
 // open mgcb editor -> rigt lick content -> add existing item -> open file -> clikc copy file to directory -> click save always
 // png, jpg, bmp, gif, dds : accepted formats
+// posY-- = up; posY++ = down
+
+//_spriteBatch.Begin(SpriteSortMode.deferred) - draw agad after end ng sprite 
+//_spriteBatch.Begin(SpriteSortMode.immediate) - draw agad agad
+// back to front, priority level, front to back baliktad
+
+_spriteBatch.Draw(boxTexture,
+                new Rectangle(20, 20, 150, 150),
+                new Rectangle(0, 0, boxTexture.Width, boxTexture.Height),
+                 Color.White, rotation, new Vector2(0,0), SpriteEffects.None, 0);
+_spriteBatch.Draw(boxTexture,
+                new Rectangle(20, 20, 150, 150),
+                new Rectangle(0, 0, boxTexture.Width, boxTexture.Height),
+                 Color.White, rotation, new Vector2(0,0), SpriteEffects.None, 1);
+
+
+// priotity irender ung 0
+
+////_spriteBatch.Begin(SpriteSortMode.Texture, null, null, null, null) - order how u initialize ung 2d images
+
 
 //game1.cs
 
@@ -24,7 +44,9 @@ namespace Activity1_Finals
     {
         private GraphicsDeviceManager _graphics; // provide a way of acccess in graphic device
         private SpriteBatch _spriteBatch; // class that will allow you to display sprite images; core class of displaying images and text
-        Texture2D boxTexture;
+        Texture2D boxTexture, numberTexture;
+        int posX, posY, delay;
+        float rotation;
 
         public Game1() //virtual  method ni game class; this is a constructor
         {
@@ -41,6 +63,10 @@ namespace Activity1_Finals
         protected override void Initialize() //method 1 ; initialize field variable that can be used in game logic; initialize game asset
         {
             //pwede rin ilagay dito ung preferredbuffer height and width pero dapat maglagay ng _graphics.ApplyChanges() to implement those change
+            posX = 0;
+            posY = 200; 
+            delay = 0;
+            rotation += 1f;
 
             base.Initialize();
         }
@@ -48,6 +74,8 @@ namespace Activity1_Finals
         protected override void LoadContent() // method 2; initialize variables that are used to load game assets; texture, audio
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            boxTexture = Content.Load<Texture2D>("box"); // lagay image name
+            numberTexture = Content.Load<Texture2D>("demoimage");
 
             // TODO: use this.Content to load your game content here
         }
@@ -56,6 +84,31 @@ namespace Activity1_Finals
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            posX++; // move from left to right
+            posY--; // move up
+
+            /*
+            if (posX < 3) {
+                posX++;
+
+            }
+            else {  posX--; }
+            *\
+
+            // certain parts of animation
+            if (delay > 60)
+            {
+
+                if (posX < 3)
+                {
+                    posX++;
+
+                }
+                else { posX--; }
+                delay = 0;
+            }
+            delay++;
+
 
             // TODO: Add your update logic here
 
@@ -68,8 +121,32 @@ namespace Activity1_Finals
 
             // these 2 only works inside draw  method
             _spriteBatch.Begin(); // begin start of drawing
+
             // use color.white to preserve orig color
             _spriteBatch.Draw(boxTexture, new Rectangle (0, 0, 100, 100), Color.DeepPink); // displacement and shading
+            // if want to put sa right side na sagad, minus width to x, if want to put sa right side bot na sagad, minus height to y
+            // para sure Window.ClientBounds.Width-100 , Window.ClientBounds.Height-100 (minus x sa width, minus y sa height)
+            // to center: Window.ClientBounds.Width/2-50 , Window.ClientBounds.Height/2-50
+
+            _spriteBatch.Draw(boxTexture, new Vector2(20, 100), Color.White); // uses the orig size of image
+
+            _spriteBatch.Draw(boxTexture,
+                new Rectangle(20, 20, 150, 150),  //position and size of image in window
+                new Rectangle(0, 0, boxTexture.Width, boxTexture.Height),  //  portion of the image to be displayed
+                Color.White);
+
+            // nagbabago animations
+             new Rectangle(numberTexture.Width/4*posX, 0, numberTexture.Width/4, numberTexture.Height/4),
+              Color.White);
+
+            _spriteBatch.Draw(boxTexture,
+                new Rectangle(20, 20, 150, 150),
+                new Rectangle(0, 0, boxTexture.Width, boxTexture.Height),
+                 Color.White, rotation, new Vector2(0,0), SpriteEffects.None, 0);
+                //SpriteEffects.FlipHoizontally - finiflip
+                //rotation - nirorotate ung image
+                // new vector2 -  position of the image
+
 
             _spriteBatch.End(); // end the drawing
 
