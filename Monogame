@@ -1,0 +1,81 @@
+// dl monogame from extensions ng visual studio code
+// Program.cs - pang run lang, walang gagalawin
+// Game1.cs - dito mag type ng code
+// not supported ni microsoft si monogame
+// the methods are the life cycle of monogame; virtual methods
+// Initialize -> load content -> update -> draw
+// initialize and load content is once
+// update and draw continuous
+// default size of window is 800 x 480
+// to add assests -> soluions explorer -> drop down content -> content.mgcb -> riggt clck open with -> mgcb editor (if not available:Monogame pipeline tool) -> click ok
+// open mgcb editor -> rigt lick content -> add existing item -> open file -> clikc copy file to directory -> click save always
+// png, jpg, bmp, gif, dds : accepted formats
+
+//game1.cs
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+
+namespace Activity1_Finals
+{
+    public class Game1 : Game // (game class is inherited)
+    {
+        private GraphicsDeviceManager _graphics; // provide a way of acccess in graphic device
+        private SpriteBatch _spriteBatch; // class that will allow you to display sprite images; core class of displaying images and text
+        Texture2D boxTexture;
+
+        public Game1() //virtual  method ni game class; this is a constructor
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true; // visibilty of mouse
+            _graphics.PreferredBackBufferWidth = 1000; // sets manually the size of window width
+            _graphics.PreferredBackBufferHeight = 600; // sets manually the size of window height
+            TargetElapsedTime = TimeSpan.FromSeconds(1f/60f);  // lower fps = unsmooth/babagal; allow you to change the frame per second
+            _graphics.IsFullScreen = true; // para full screen yung game
+
+        }
+
+        protected override void Initialize() //method 1 ; initialize field variable that can be used in game logic; initialize game asset
+        {
+            //pwede rin ilagay dito ung preferredbuffer height and width pero dapat maglagay ng _graphics.ApplyChanges() to implement those change
+
+            base.Initialize();
+        }
+
+        protected override void LoadContent() // method 2; initialize variables that are used to load game assets; texture, audio
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // TODO: use this.Content to load your game content here
+        }
+
+        protected override void Update(GameTime gameTime) // method 3; implements game loop and game logic
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            // TODO: Add your update logic here
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime) // methof 4; draw different images for the game, like rendering; for game loop also
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue); // necessary; erase content of previous print; smudge effect pag walang ganto
+
+            // these 2 only works inside draw  method
+            _spriteBatch.Begin(); // begin start of drawing
+            // use color.white to preserve orig color
+            _spriteBatch.Draw(boxTexture, new Rectangle (0, 0, 100, 100), Color.DeepPink); // displacement and shading
+
+            _spriteBatch.End(); // end the drawing
+
+            // TODO: Add your drawing code here
+
+            base.Draw(gameTime);
+        }
+    }
+}
