@@ -1,0 +1,63 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+
+namespace Bouncing_Ball
+{
+    internal class Ball
+    {
+        Texture2D ballTexture;
+        Rectangle ballRectangle;
+        Color ballColor;
+        bool ballDX = false, ballDY = false;
+        public Ball(Texture2D ballTexture, Rectangle ballRectangle, Color ballColor)
+        {
+            this.ballTexture = ballTexture;
+            this.ballRectangle = ballRectangle;
+            this.ballColor = ballColor;
+        }
+
+        public Texture2D BallTexture { get => ballTexture;  }//get{return ballTexture;}
+        public Rectangle BallRectangle { get => ballRectangle; }
+        public Color BallColor { get => ballColor;  }
+
+        //ballDX (T-move right) (F-move left)
+        //ballDY (T-move down) (F-move up)
+
+        public void BallMovement()
+        {
+            if (ballRectangle.X <= 0)
+            {
+                ballDX = true;
+            }
+            else if (ballRectangle.Right >= 800)
+            {
+                ballDX = false;
+            }
+            if (ballDX)
+            {
+                ballRectangle.X += 5;
+            }
+            else
+            {
+                ballRectangle.X -= 5;
+            }
+            if (ballRectangle.Y <= 0)
+            {
+                ballDY = true;
+            }
+            else if (ballRectangle.Bottom >= 480)
+            {
+                ballDY = false;
+            }
+            if (ballDY)
+            {
+                ballRectangle.Y += 5;
+            }
+            else
+            {
+                ballRectangle.Y -= 5;
+            }
+        }
+    }
+}
