@@ -1,0 +1,112 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+
+
+// Alpha (A) = 255 -> visible
+namespace Pixel_Collision_Concept
+{
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        Texture2D c1Texture, c2Texture; // for picture
+        Rectangle c1Display, c2Display; // stores x,y width, height positions of rectangle
+        Color c1Color, c2Color;
+        
+        //constructor
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true; // visible mouse cursor
+        }
+
+        protected override void Initialize()
+        {
+            c1Texture = Content.Load<Texture2D>("C1"); //loads pics
+            c2Texture = Content.Load<Texture2D>("C2"); // loads pics
+            c1Display = new Rectangle(20,20,c1Texture.Width,c1Texture.Height); // width n height matches the image sizes
+            c2Display = new Rectangle(250,20,c2Texture.Width,c2Texture.Height);
+            c1Color = Color.White; // color.white means orig color
+            c2Color = Color.White;
+
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice); //creates the object for drawing sprites
+
+            
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            bool checkCollision = false;
+            c1Display.Location = Mouse.GetState().Position; // sprite 1 follows the mouse
+            if (c1Display.Intersects(c2Display)) // checks whether the 2 bounding boxes overlap; when not overlapped, skipped sya
+            {
+                if(pixelCollision(c1Texture, c2Texture, c1Display, c2Display)){ // checks actual pixels
+                    checkCollision = true;
+                }
+            }
+            if (checkCollision) //pag may collision, changes color to black
+            {
+                c1Color = Color.Black;
+                c2Color = Color.Black;
+            }
+            else // no collisions means no change in color
+            {
+                c1Color = Color.White;
+                c2Color = Color.White;
+            }
+                base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue); // clears screen
+            _spriteBatch.Begin();
+                _spriteBatch.Draw(c1Texture, c1Display, c1Color);
+                _spriteBatch.Draw(c2Texture, c2Display, c2Color);
+            _spriteBatch.End();
+            base.Draw(gameTime);
+        }
+
+        bool pixelCollision(Texture2D t1, Texture2D t2, Rectangle r1, Rectangle r2)
+        {
+            // every pixel gets stored in these arrays
+            Color[] image1Color = new Color[t1.Width * t1.Height];
+            Color[] image2Color = new Color[t2.Width * t2.Height];
+            //copy image pixels so every pixel color is accessible
+            t1.GetData<Color>(image1Color);
+            t2.GetData<Color>(image2Color);
+
+            //checks for overlapping rectangle
+            int top = Math.Max(r1.Top, r2.Top);
+            int bottom = Math.Min(r1.Bottom, r2.Bottom);
+            int left = Math.Max(r1.Left, r2.Left);
+            int right = Math.Min(r1.Right, r2.Right);
+
+            // Checks every pixel inside the overlap region.
+            for (int i = top; i < bottom; i++)
+            {
+                for (int j = left; j < right; j++)
+                {
+                    //Convert world coordinates to image coordinates
+                    Color col1 = image1Color[(i - r1.Top) * r1.Width + (j - r1.Left)];
+                    Color col2 = image2Color[(i - r2.Top) * r2.Width + (j - r2.Left)];
+                    Console.WriteLine(col1.A + "   " + col2.A);
+                    // this checks transparency
+                    if (col1.A != 0 && col2.A != 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+}
