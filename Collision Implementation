@@ -1,0 +1,147 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace Collision_Implementation
+{
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        Texture2D ballTexture, boxTexture;
+        Rectangle ballRectangle, boxRectangle;
+        Color ballColor, boxColor;
+
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
+
+        protected override void Initialize()
+        {
+            ballRectangle = new Rectangle(10, 10, 100, 100);
+            boxRectangle = new Rectangle(200, 200, 100, 100);
+            ballColor = Color.White;
+            boxColor = Color.White;
+
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            ballTexture = Content.Load<Texture2D>("Ball");
+            boxTexture = Content.Load<Texture2D>("Box");
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            ballRectangle.Location = Mouse.GetState().Position; // ball follows mouse
+            ballRectangle.Location = new Point(Mouse.GetState().X-ballRectangle.Width/2, 
+            Mouse.GetState().Y-ballRectangle.Height/2); // this centers tha ball on mouse
+
+            //Rectangle
+            // checks if rectangles overlap
+            #region Intersects
+            if (boxRectangle.Intersects(ballRectangle)) {
+                boxColor.A = 0; // invisible
+            }
+            else
+            {
+               boxColor.A = 255; //visible
+            }
+            #endregion
+
+
+            // checks if a point is inside a rectangle
+            #region Contains 
+            if (boxRectangle.Contains(Mouse.GetState().Position))
+            {
+                boxColor = Color.Black; // pag nasa loob ng window si mouse, box turns black
+            }
+            else
+            {
+                boxColor = Color.White; // mouse leaves it turns to original color
+            }
+
+          
+            #endregion
+
+            //Vector2 : makes the ball cannot leave screen
+            #region Clamp
+            Vector2 ballV2 = new Vector2(Mouse.GetState().X, Mouse.GetState().Y);
+            Vector2 ballRestriction = Vector2.Clamp(ballV2,
+                new Vector2(0, 0),
+                new Vector2(Window.ClientBounds.Width-ballRectangle.Width, //max X n max Y
+                Window.ClientBounds.Height-ballRectangle.Height));
+            ballRectangle.Location = new Point((int)ballRestriction.X, (int)ballRestriction.Y);
+            #endregion
+
+            //Distance: computes how far are they
+            #region Distance
+            Vector2 boxV2 = new Vector2(boxRectangle.X, boxRectangle.Y);
+            //Vector2 ballV2 = new Vector2(ballRectangle.X, ballRectangle.Y);
+            //if(Vector2.Distance(boxV2, ballV2) > 200)
+            // box visible
+            //{
+            //    boxColor.A = 255; 
+            //
+            //}
+            //box invisible
+            //else
+            //{
+            //    boxColor.A = 0;
+            //}
+            #endregion
+
+            //Max: chooses the larger x and y values
+            #region Max
+            //Vector2 boxV2 = new Vector2(boxRectangle.X, boxRectangle.Y);
+            //Vector2 ballV2 = new Vector2(ballRectangle.X, ballRectangle.Y);
+
+            //if(Vector2.Max(boxV2,ballV2) == boxV2)
+            //=> this statement asks "Is box greater than or equal to ball in BOTH coordinates?
+            //{
+            //    boxColor.A = 0;
+            //}
+            //else
+            //{
+            //    boxColor.A = 255;
+            //}
+            #endregion
+
+            //Min: opposite of MAX
+            //Is box smaller than or equal to ball in both coordinates?
+            #region Min
+            //Vector2 boxV2 = new Vector2(boxRectangle.X, boxRectangle.Y);
+            //Vector2 ballV2 = new Vector2(ballRectangle.X, ballRectangle.Y);
+
+            //if (Vector2.Min(boxV2, ballV2) == boxV2)
+            //{
+            //    boxColor.A = 0;
+            //}
+            //else
+            //{
+            //    boxColor.A = 255;
+            //}
+            #endregion
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            _spriteBatch.Begin();
+                _spriteBatch.Draw(boxTexture, boxRectangle, boxColor);
+                _spriteBatch.Draw(ballTexture, ballRectangle, ballColor);
+            _spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+    }
+}
