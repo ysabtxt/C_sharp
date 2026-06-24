@@ -139,6 +139,20 @@ namespace Bouncing_Ball
             {
                 b.BallMovement();
             }
+
+
+                 foreach(Ball b in ball)
+            {
+                foreach (Ball b1 in ball){
+                        if(b1 !=b){ // checks if same object  yung 2 foreach
+                                if(b1.BallRectangle.Intersects(b.Rectangle){ //output: pag nag iintersect, nag iiba ng kulay
+                                        b1.ChangeColor();
+                                        b.ChangeColor();
+                                }
+
+                        }
+                }
+            }
             base.Update(gameTime);
         }
 
