@@ -1,0 +1,174 @@
+________________________________
+        ball.cs
+________________________________
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+
+namespace Bouncing_Ball
+{
+    internal class Ball
+    {
+        Texture2D ballTexture;
+        Rectangle ballRectangle;
+        Color ballColor;
+        bool ballDX, ballDY; // decides san direction ng ball
+        Random rand = new Random();
+        public Ball(Texture2D ballTexture, Rectangle ballRectangle, Color ballColor, bool ballDX, bool ballDY)
+        {
+            this.ballTexture = ballTexture;
+            this.ballRectangle = ballRectangle;
+            this.ballColor = ballColor;
+            this.ballDX = ballDX;
+            this.ballDY = ballDY;
+        }
+
+        public Texture2D BallTexture { get => ballTexture;  }
+        public Rectangle BallRectangle { get => ballRectangle; }
+        public Color BallColor { get => ballColor;  }
+        public Texture2D BallTexture1 { get => ballTexture; }
+        public Rectangle BallRectangle1 { get => ballRectangle; }
+        public Color BallColor1 { get => ballColor; set => ballColor = value; }
+        public bool BallDX { get => ballDX; set => ballDX = value; }
+        public bool BallDY { get => ballDY; set => ballDY = value; }
+
+        public void BallMovement()
+        {
+            if (ballRectangle.X <= 0)
+            {
+                ballDX = true;
+            }
+            else if (ballRectangle.Right >= 800)
+            {
+                ballDX = false;
+            }
+            if (ballDX)
+            {
+                ballRectangle.X += 2;
+            }
+            else
+            {
+                ballRectangle.X -= 2;
+            }
+            if (ballRectangle.Y <= 0)
+            {
+                ballDY = true;
+            }
+            else if (ballRectangle.Bottom >= 480)
+            {
+                ballDY = false;
+                //ballColor = Color.White;
+            }
+            if (ballDY)
+            {
+                ballRectangle.Y += 2;
+            }
+            else
+            {
+                ballRectangle.Y -= 2;
+            }
+        }
+
+        //this makes the ball to change direction
+        public void ChangeDirection()
+        {
+                ballDX = !ballDX;
+                ballDY = !ballDY;
+              
+            BallMovement(); // make sure implemented sa ball movement
+        }
+    }
+}
+
+
+
+________________________________
+        game1.cs
+________________________________
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+// list is a cololection, can hold multiple objects, unlimited
+// this uses an array
+namespace Bouncing_Ball
+{
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        Ball[] ball;
+        Random rand;
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
+
+        protected override void Initialize()
+        {
+            rand = new Random();
+            Texture2D ballTexture = Content.Load<Texture2D>("C3");
+            int posX = 0, posY = 0;
+            for (int i = 0; i < 10; i++)
+            {
+
+                posX = rand.Next(20, Window.ClientBounds.Width - 50);
+                posY = rand.Next(20,Window.ClientBounds.Height - 50);
+                Rectangle ballRectangle = new Rectangle(posX, posY, 20, 20);
+                Color ballColor = new Color(rand.Next(0,255), rand.Next(0, 255), rand.Next(0, 255));
+                ball [i] = new Ball(ballTexture, ballRectangle,
+                    ballColor, rand.Next(0, 10) % 2 == 1 ? true : false, rand.Next(0, 10) % 2 == 1 ? true : false); //starting direction of ball
+                ball.Add(b);
+            }
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            foreach(Ball b in ball)
+            {
+                b.BallMovement();
+            }
+
+
+                 foreach(Ball b in ball)
+            {
+                foreach (Ball b1 in ball){
+                        if(b1 !=b){ // checks if same object  yung 2 foreach
+                                if(b1.BallRectangle.Intersects(b.Rectangle){ //output: pag nag iintersect, nag chachange direction nila
+                                        b1.ChangeDirection();
+                                        b.ChangeDirection();
+                                }
+
+                        }
+                }
+            }
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            _spriteBatch.Begin();
+
+            for (int i = 0; i < ball.Length; i++)
+            {
+                _spriteBatch.Draw(ball[i].BallTexture, ball[i].BallRectangle, ball[i].BallColor);
+
+            }
+            _spriteBatch.End();
+            base.Draw(gameTime);
+        }
+    }
+}
