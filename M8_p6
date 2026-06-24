@@ -1,0 +1,216 @@
+________________________________
+        ball.cs
+________________________________
+//SPRITE FONT ASSET => New item => spritefont descrip => name the file
+// display score
+// to edit => click so solution explorer ung file
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+
+namespace Bouncing_Ball
+{
+    internal class Ball
+    {
+        Texture2D ballTexture;
+        Rectangle ballRectangle;
+        Color ballColor;
+        bool ballDX, ballDY;
+        Random rand = new Random();
+        public Ball(Texture2D ballTexture, Rectangle ballRectangle, Color ballColor, bool ballDX, bool ballDY)
+        {
+            this.ballTexture = ballTexture;
+            this.ballRectangle = ballRectangle;
+            this.ballColor = ballColor;
+            this.ballDX = ballDX;
+            this.ballDY = ballDY;
+        }
+
+        public Texture2D BallTexture { get => ballTexture;  }
+        public Rectangle BallRectangle { get => ballRectangle; }
+        public Color BallColor { get => ballColor;  }
+        public Texture2D BallTexture1 { get => ballTexture; }
+        public Rectangle BallRectangle1 { get => ballRectangle; }
+        public Color BallColor1 { get => ballColor; set => ballColor = value; }
+        public bool BallDX { get => ballDX; set => ballDX = value; }
+        public bool BallDY { get => ballDY; set => ballDY = value; }
+
+        public void BallMovement()
+        {
+            if (ballRectangle.X <= 0)
+            {
+                ballDX = true;
+            }
+            else if (ballRectangle.Right >= 800)
+            {
+                ballDX = false;
+            }
+            if (ballDX)
+            {
+                ballRectangle.X += 2;
+            }
+            else
+            {
+                ballRectangle.X -= 2;
+            }
+            if (ballRectangle.Y <= 0)
+            {
+                ballDY = true;
+            }
+            else if (ballRectangle.Bottom >= 480)
+            {
+                ballDY = false;
+                //ballColor = Color.White;
+            }
+            if (ballDY)
+            {
+                ballRectangle.Y += 2;
+            }
+            else
+            {
+                ballRectangle.Y -= 2;
+            }
+        }
+
+        public void ChangeDirection()
+        {
+                ballDX = !ballDX;
+                ballDY = !ballDY;
+                ballColor = new Color(rand.Next(0, 255), rand.Next(0, 255), rand.Next(0, 255));
+            BallMovement();
+        }
+    }
+}
+
+
+
+________________________________
+        game1.cs
+________________________________
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+
+namespace Bouncing_Ball
+{
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        List <Ball> ball;
+        SoundEffect backgorundSE; // store bgm asset
+        SoundEffectInstance backgorundSEI; //si instance walang capability na irekta kay sound efect; allows to manipulate sound assets
+        Random rand;
+        SpriteFont gameFont;
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
+
+        protected override void Initialize()
+        {
+            rand = new Random();
+            ball =new List<Ball>(); // no wasted space, mag aadjust memory
+            Texture2D ballTexture = Content.Load<Texture2D>("C3");
+            int posX = 0, posY = 0;
+            for (int i = 0; i < 10; i++)
+            {
+
+                posX = rand.Next(20, Window.ClientBounds.Width - 50);
+                posY = rand.Next(20,Window.ClientBounds.Height - 50);
+                Rectangle ballRectangle = new Rectangle(posX, posY, 20, 20);
+                Color ballColor = new Color(rand.Next(0,255), rand.Next(0, 255), rand.Next(0, 255));
+                Ball b = new Ball(ballTexture, ballRectangle,
+                    ballColor, rand.Next(0, 10) % 2 == 1 ? true : false, rand.Next(0, 10) % 2 == 1 ? true : false); //starting direction of ball
+                ball.Add(b); // added to list collection
+            }
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            backgorundSE = Content.Load<SoundEffect>("Game Background"); 
+            //backgroundSE.Play();
+            backgorundSEI = backgrundSE.CreateInstance(); // allows to manipulate yng sounds
+            backgorundSEI.IsLoop = true; // naka loop ung sound
+            backgroundSE.Play();
+
+            gameFont = Content.Load<SpriteFont>("Game FOnt TX22");
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            foreach(Ball b in ball)
+            {
+                b.BallMovement();
+            }
+
+
+                 foreach(Ball b in ball)
+            {
+                foreach (Ball b1 in ball){
+                        if(b1 !=b){ // checks if same object  yung 2 foreach
+                                if(b1.BallRectangle.Intersects(b.Rectangle){ //output: pag nag iintersect, nag iiba direction tas mareremove pag nag intersect 
+                                        b1.ChangeDirection();
+                                        b.ChangeDirection();
+                                        ball.Remove(b1);
+                                        ball.Remove(b);
+                                        SoundEffect explosion = Content.Load <SoundEffect>("explosion");
+                                        SoundEffectInstance explosionInstance = explosion.CreateInstance();
+                                        explosionInstance.Play();
+                                        goto A; //binibreak ung loop
+                                }
+
+                        }
+                }
+            }
+            A:
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            _spriteBatch.Begin();
+
+            for (int i = 0; i < ball.Count; i++)
+            {
+                _spriteBatch.Draw(ball[i].BallTexture, ball[i].BallRectangle, ball[i].BallColor);
+
+            }
+        // mutable = pede mag concat; non mutable = bawal mag concat
+        // rtl = start sa right ung display
+        // Vector2.Zero = new Vector2(0,0)
+        // new Vector2(Winow.CLientBounds.Width/2-100,20) = center sa taas yung text
+            _spriteBatch.DrawString(gameFont, "ball COunt" + ball.Count, Vector2.Zero, Color.Black); // to display sprite font sa screen
+            _spriteBatch.End();
+            base.Draw(gameTime);
+        }
+    }
+}
+
+
+
+
+sa update to:
+if (startButton.ButtonRectangle.Contains(Mouse.GetState().Position){
+  startButton.HoverEffect();
+      if(Mouse.GetState().LeftButton == ButtonState.Pressed){
+        startGame= true;
+      } else
+        Button.LeaveEffect
+}
+
+
+hovereffect method:
+buttonCaptionColor = Color.Red;
+
+LeaveEffect method:
+buttonCaptionColor = Color.Black;
+
+
