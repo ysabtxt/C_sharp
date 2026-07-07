@@ -1,0 +1,81 @@
+namespace platformer{
+
+  internal GameTile{
+    Texture2D tileTexture;
+    Rectangle tileDisplay, tileSource;
+    Color tileColor; => generate constructor from members; encapsulate fields but dont use property smth
+
+    public GameTile (Texture2D tileTexture, Rectangle tileDIsplay, Rectangle tileSource, Color tileColor ){ => initialization
+      this.tileTexture= tileTexture;
+      this. blabla
+    }
+
+    public Texture2D TileTexture{
+      get = > blabla
+    }
+  
+  }
+}
+
+
+
+
+game1.cs
+
+namespace platformer{
+public class game1: game
+  private _graphics keme basta mga default jan
+  GameTile[] gt;
+
+  sa initialize():
+  Texture2D tileTexture = Content.Load<Texture2d>("Platform 2")
+  Rectangle tileDisplay = new Rectangle (0, WindowsClientHeight- 40, 40, 40) = > nif not array
+  Rectangle tileSource = new rectangle (0, 0, tileTexture.width/6, tileTexture.height);
+  Color tileColor = Color.White;
+  int posX= 0;
+  gt = new GameTile(tileTexture, tileDisplay, tileSource, tileColor); => if not array
+  gt = new GameTile[2]; = sets ilan pwede ipakita
+  for (int i = 0; i <2; i++) = dapat same sa initialization kung ilan
+
+  gt = new List<GameTile>();
+  {
+    Rectangle tileDisplay = newRectangle (posX, windows.clientboundheight- 40, 40, 40);
+    gt[i]= new GameTile(tileTexture, tieleDisplay, tileSource, tileColor)
+    gt.Add(new Gametile(tileTexture,tieleDisplay, tileSource, tileColor))
+    posX += 40;
+  }
+  player = new  Player (contentload eme)
+
+  base.Initialize()
+
+
+sa update:
+
+  sa draw:
+  _spriteBatch.Begin();
+  forach (GameTile in gt){
+  _spriteBatch.Draw(gt.Tiletexture, gt.TileDisplay, gt.TileSource, gt.Tile) => not array
+    _spriteBatch.Draw(tile.Tiletexture, tile.TileDisplay, tile.TileSource, tile.Tile) => not array
+  }
+ _spriteBatch.Draw(player.Playertecture, playerrect, playercolor)
+}
+
+
+
+
+player.cs
+
+internal class Player{
+Texture2D playerTexture;
+Rectangle playerRectangle;
+Color playerColor; generate constructor from members; encapsulate fields but dont use property smth
+
+public GameTile (Texture2D tileTexture, Rectangle tileDIsplay, Rectangle tileSource, Color tileColor ){ => initialization
+      this.tileTexture= tileTexture;
+      this. blabla
+    }
+
+    public Texture2D TileTexture{
+      get = > blabla
+    }
+}
