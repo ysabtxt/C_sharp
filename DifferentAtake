@@ -1,0 +1,149 @@
+=> nag iiba background pag nakaraating si character sa specific position
+=> cocept 1
+
+Player.cs
+
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace Concept_1
+{
+    internal class Player
+    {
+        Texture2D playerTexture;
+        Rectangle playerRectangle;
+        Color playerColor;
+
+        public Player(Texture2D playerTexture, Rectangle playerRectangle, Color playerColor)
+        {
+            this.playerTexture = playerTexture;
+            this.playerRectangle = playerRectangle;
+            this.playerColor = playerColor;
+        }
+
+        public Texture2D PlayerTexture { get => playerTexture;}
+        public Rectangle PlayerRectangle { get => playerRectangle;}
+        public Color PlayerColor { get => playerColor;}
+
+        public void PlayerMovement(int posX, int posY)
+        {
+            playerRectangle.Location = new Point(posX, posY);
+        }
+
+        public void ChangePosition(Point position) // para nateteleport sya sa ibang part ng bg
+        {
+            if(position.X <= 0)
+            {
+                playerRectangle.X = 790;
+            }else if(position.X >= 800)
+            {
+                playerRectangle.X = 5;
+            } 
+            if(position.Y <= 0)
+            {
+                playerRectangle.Y = 475;
+            }else if(position.Y >= 480)
+            {
+                playerRectangle.Y = 50;
+            }
+        }
+    }
+}
+
+
+
+game1.cs
+  using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace Concept_1
+{
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        GameBackground background;
+        Player player;
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
+
+        protected override void Initialize()
+        {
+            Texture2D backgroundTexture = Content.Load<Texture2D>("Game Background");
+            Rectangle backgroundDisplay = 
+                new Rectangle(0, 0, 
+                Window.ClientBounds.Width, Window.ClientBounds.Height);
+            Rectangle backgroundSource = 
+                new Rectangle(0,0,backgroundTexture.Width/2, backgroundTexture.Height/2); // source
+            Color backgroundColor = Color.White;
+            background = new GameBackground(backgroundTexture,
+                backgroundDisplay,
+                backgroundSource,
+                backgroundColor);
+            Texture2D playerTexture = Content.Load<Texture2D>("Player");
+            Rectangle playerRectangle = new Rectangle(20, 20, 30, 30);
+            Color playeColor = Color.White;
+            player = new Player(playerTexture, playerRectangle, playeColor); 
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            
+        }
+
+        protected override void Update(GameTime gameTime) 
+        {
+            int posX = player.PlayerRectangle.X;
+            int posY = player.PlayerRectangle.Y;
+            if (Keyboard.GetState().IsKeyDown(Keys.A) ||
+                Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                posX -= 2;
+            }else if (Keyboard.GetState().IsKeyDown(Keys.D) ||
+                Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                posX += 2;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.W) ||
+                Keyboard.GetState().IsKeyDown(Keys.Up))
+            {
+                posY -= 2;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.S) ||
+                Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                posY += 2;
+            }
+            player.PlayerMovement(posX, posY);
+            background.BackgroundChange(player.PlayerRectangle.Location);
+            player.ChangePosition(player.PlayerRectangle.Location);
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            _spriteBatch.Begin();
+                _spriteBatch.Draw(background.BackgroundTexture,
+                    background.BackgroundDisplay,
+                    background.BackgroundSource,
+                    background.BackgroundColor);
+                _spriteBatch.Draw(player.PlayerTexture,
+                    player.PlayerRectangle,
+                    player.PlayerColor);
+            _spriteBatch.End();
+
+            base.Draw(gameTime);
+        }
+    }
+}
+
