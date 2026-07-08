@@ -1,0 +1,111 @@
+// save and load
+// => making a stream of connection
+// => connection between file where u going to save d data and program mismo
+
+//save - hanggang may naka connect, bawal  mag connect ng iba
+
+StreamWriter (class) - may mga propertries/method that allows to save sa stream connection; 
+                    - creates the actual file depends on the string parameter of object
+formst 1- new StreamWriter (string) => string name na naka assdign dun mag base sa creation ng file; if the file is existing, 
+        - eremoved sya tas replaced by a new file
+f2 - new StreamWriter (string, bool) => 2nd parameter should be true, bali yung mga data saved is madagdag ng madagdag
+
+StreamReader = allows to read data
+File.Exists ("") = u could determine if the existing file is existing sa program
+> to determine kung iloan naka store sa list = count
+
+--------------------
+lesson notes
+--------------------
+1st step: bool checkSave 
+2md step: initialize checkSave= false;
+3rd: (update) if(Keyboard.GetState().IsKeyDown(Keys.S) && !checkSave){ StreamWroter saveData = new StreamWriter(TX22.txt); 
+                                                                        f2 =StreamWroter saveData = new StreamWriter(TX22.txt, true)
+      saveData.WriteLine(gameLife.ToString()+"," +gLife.ToString()+"," + asteroids.Count); => writes sa stream
+      saveData.Flush();  (1st option => after flush, magkakaron ng another saveData)
+       saveData.Close(); (2nd option = > pag sarado file wala na saveData, before cutting connection ipush sa saving file tas saka iclose )
+                          - atake is kung ano recent data, un lang
+      checkSave = true; } elseif (Keyboard.GetState().IsKeyUp(Keys.S)
+      {  checksave = false;}=> write data in a string  
+
+if(Keyboard.GetState().IsKeyDown(Keys.L) && !checkLoad){ StreamReader loadData = new StreamReader("TX22.txt");
+                                                string data = loadData.ReadLine(); Console.WriteLine(data)
+                                          data = loadData.ReadLine(); Console.WriteLine(data); loadData.close();
+                                          checkLoad = true;} => babasahin nya ung mga data sa stream write so continuous siya
+
+
+4th: ung file is nasa loob ng bin tas debug
+
+
+
+------
+sa loob pa rin to ng 3rd step (update)
+------
+
+if(Keyboard.GetState().IsKeyDown(Keys.L) && !checkLoad){
+
+    if(File.Exists(TX22){
+        while (!loadData.EndOfStream){
+          string data = loadData.ReadLine();
+          string[] splitData = data.Split (",");  // size of array depends sa ,
+          Console.WriteLine("Life" + splitData[0] + time + spliData[1] + asteroid count + splitdata[2]) => life: 20   time: 100  asterooid count:  80
+          }
+          loadData.Close();
+    }else{
+        Console.WriteLine("File not found");
+    }
+      checkLoad = true;
+} else if (Keyboard.GetState().IsKeyUp(Keys.L)){
+      checkLoad = false;
+      }
+==> efficient way imbes na ung isa; does the same shit
+
+
+
+XML xerializer - may format, may specific group
+GameData.cs => should be declared as public class at lahat ng fiels
+= constructor should be parameterless
+
+public class GameData{
+  public int gameTime, gameLife, asteroidCount;
+  rectangle[] asteroidrc;
+  color[] asteroidCol;
+  string[] asteroidname;
+  => assign values na icreate base sa gamedata class, compress, rekta kay file
+}
+
+sa !checkSave{
+    GameData myData = new GameData();
+    myData.gameTime= gTime;
+    myData.gameLife = gameLife;
+    myData.asteroidCount = asteroids.Count;
+    myData.asteroidRec = new Rectangle[asteroids.Count];
+    checkSave=true;
+    myData.asteroidCol = new Color[asteroid.Count];
+    asteoidname= newstring[asteroid.Count];
+    int index=0;
+    foreach(Asteroids ad in asteroids){
+    myData.asteroidRec[index] = ad.AsteroidRectangle;
+=> same gagawin sa d rest
+index ++;
+}
+XmlSerializer saveData = new XmlSerial;izer(typeof(Gamedata));
+StreamWriter sw = new StreamWriter("tx22xml.txt");
+saveData.Serialize(sw,myData);
+sw.Close();
+checkSave = true;
+}
+
+
+texture2d = > di kaya ni xml kasikay framework lng un
+
+XmlSerializer saveData = new XmlSerial;izer(typeof(Gamedata));
+StreamReader sr = new StreamReader (TX22.xml); => estract data from file so kung ano ung nakstore yon ung malalaro
+Gamedata gameData = (GameData)loadData.Deserializer(sr);
+gTime = gameData.gameLife;
+gameLife = gameData.gTime;
+asteroids.Clear();  => remove nastore na elements sa asteroids
+for (int i=0; i<gameData.asteroidCount; i++){
+Asteroids ad = new Asteroids(Content.Load<Texture2D>(gameData.asteroidName[i], rec, col,
+}
+sr.Closse();
