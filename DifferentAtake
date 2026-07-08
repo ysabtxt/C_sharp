@@ -147,3 +147,71 @@ namespace Concept_1
     }
 }
 
+
+concept2:
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace Concept_2
+{
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        Texture2D backgroundTexture;
+        Matrix gameCameraPosition; => xyz
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
+
+        protected override void Initialize()
+        {
+            // TODO: Add your initialization logic here
+            gameCameraPosition = Matrix.Identity; => aassigning all variable to all axis
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            backgroundTexture = Content.Load<Texture2D>("Concept 2");
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            if(Keyboard.GetState().IsKeyDown(Keys.A) ||
+                Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                gameCameraPosition = Matrix.CreateTranslation(gameCameraPosition.Translation.X+1, // CreateTranslation allows u to change position of camera
+                    gameCameraPosition.Translation.Y,
+                    gameCameraPosition.Translation.Z); 
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D) ||
+                Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                gameCameraPosition = Matrix.CreateTranslation(gameCameraPosition.Translation.X - 1,
+                    gameCameraPosition.Translation.Y,
+                    gameCameraPosition.Translation.Z);
+            }
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, gameCameraPosition); => SpriteSortMode.Deferred means Color.White
+                _spriteBatch.Draw(backgroundTexture,
+                    new Rectangle(0, 0, backgroundTexture.Width, Window.ClientBounds.Height),
+                    Color.White);
+            _spriteBatch.End();
+            base.Draw(gameTime);
+        }
+    }
+}
+
