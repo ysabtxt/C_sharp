@@ -1,81 +1,216 @@
-namespace platformer{
+=> game1.cs
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using System.Security.Principal;
 
-  internal GameTile{
-    Texture2D tileTexture;
-    Rectangle tileDisplay, tileSource;
-    Color tileColor; => generate constructor from members; encapsulate fields but dont use property smth
+namespace Platformer
+{
+    public class Game1 : Game
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        //GameTile gt; single load
+       // GameTile[] gt; array
+        List<GameTile> gt;
 
-    public GameTile (Texture2D tileTexture, Rectangle tileDIsplay, Rectangle tileSource, Color tileColor ){ => initialization
-      this.tileTexture= tileTexture;
-      this. blabla
+
+        Player player;
+        bool checkJump = false;
+        int jumpCtr = 0;
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+        }
+
+        protected override void Initialize()
+        {
+            // TODO: Add your initialization logic here
+            Texture2D tileTexture = Content.Load<Texture2D>("Platform 2");
+            //Rectangle tileDisplay = new Rectangle(0, 0, 30, 30); upper left
+            //Rectangle tileDisplay = new Rectangle(0, Window.ClientBounds.Height-40, 40, 40); // tile at lower left
+
+            Rectangle tileSource = new Rectangle(0, 0, tileTexture.Width/6, tileTexture.Height); // anim lang yung tiles
+            Color tileColor = Color.White; // actual color of image
+                                           //gt = new GameTile (tileTexture, tileDisplay, tileSource, tileColor);
+
+            // array: gt = new GameTile[2];
+           /* for (int i = 0; i < 2, i++)
+            {
+                Rectangle tileDisplay = new Rectangle(posX, Window.ClientBounds.Height - 40, 40, 40); // tile at lower left
+                gt[i] = new Game(tileColor, tileDisplay, tileSource, tileTexture);
+                posX += 40;
+            } */
+
+
+            gt = new List<GameTile>();
+            int posX = 0;
+            for (int i = 0; i < 2, i++) {
+                Rectangle tileDisplay = new Rectangle(posX, Window.ClientBounds.Height - 40, 40, 40); // tile at lower left
+                gt.Add(new GameTile(tileTexture, tileDisplay, tileSource, tileColor));
+                posX += 40;
+            }
+
+            posX = Window.ClientBounds.Width / 2 - 100;
+            for (int i = 0; i < 5; i++) {
+                Rectangle tileDisplay = new Rectangle(posX, Window.ClientBounds.Height - 160, 40, 40); // tile at center
+                gt.Add(new GameTile(tileTexture, tileDisplay, tileSource, tileColor));
+
+            }
+            player = new Player(Content.Load<Texture2D>("Player"), new Rectangle(Window.ClientBounds.Width/2 - 25, 20, 50,50),
+                Color.Green);
+            base.Initialize();
+        }
+
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // TODO: use this.Content to load your game content here
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+            Keys[] k = Keyboard.GetState().GetPressedKeys();
+            foreach (Keys key in k) {
+                player.PlayerMovement(key);
+                break;
+            }
+            bool checkDrop = true;
+            foreach (GameTile tile in gt)
+            {
+                if (tile.TileDisplay.Intersects(player.PlayerRectangle))
+                {
+
+                    checkDrop = false;
+                    break;
+                }
+            }
+            if (checkDrop&& !checkJump)
+            {
+                player.PlayerDrop();
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) && !checkJump) {
+                jumpCtr = 120;
+                checkJump = true;
+            }
+            if (checkJump)
+            {
+                --jumpCtr;
+                player.PlayerJump();
+                if (jumpCtr <= 0) {
+                    checkJump = false;
+                    jumpCtr = 0;
+                }
+            
+            }
+            // TODO: Add your update logic here
+
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            _spriteBatch.Begin();
+            // draww single load: _spriteBatch.Draw(gt.TileTexture, gt.TileSource, gt.TileDisplay, gt.tileColor);
+
+            foreach (GameTile tile in gt)
+            {
+                _spriteBatch.Draw(tile.TileTexture, tile.TileSource, tile.TileDisplay, tile.TileColor);
+            }
+            _spriteBatch.Draw(player.PlayerTexture, player.PlayerRectangle, player.PlayerColor);
+
+            _spriteBatch.End();
+            // TODO: Add your drawing code here
+
+            base.Draw(gameTime);
+        }
     }
+}
 
-    public Texture2D TileTexture{
-      get = > blabla
+=> player.cs
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace Platformer
+{
+    internal class Player
+    {
+        Texture2D playerTexture;
+        Rectangle playerRectangle;
+        Color playerColor;
+
+        public Player(Texture2D playerTexture, Rectangle playerRectangle, Color playerColor)
+        {
+            this.playerTexture = playerTexture;
+            this.playerRectangle = playerRectangle;
+            this.playerColor = playerColor;
+        }
+
+        public Texture2D PlayerTexture { get => playerTexture; }
+        public Rectangle PlayerRectangle { get => playerRectangle; }
+        public Color PlayerColor { get => playerColor; }
+
+
+        public void PlayerMovement(Keys key)
+        {
+            if (key == Keys.Left)
+            {
+                playerRectangle.X -= 2;
+            }
+            if (key == Keys.Right)
+            {
+                playerRectangle.X += 2;
+            }
+        }
+
+
+
+        public void PlayerDrop() {
+            playerRectangle.Y += 2;        
+        
+        }
+
+        public void PlayerJump() {
+            playerRectangle.Y -= 2;
+
+        }
     }
-  
-  }
 }
 
 
+=>gameTile.cs
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 
-game1.cs
+namespace Platformer
+{
+    internal class GameTile
+    {
+        Texture2D tileTexture;
+        Rectangle tileDisplay, tileSource;
+        Color tileColor;
 
-namespace platformer{
-public class game1: game
-  private _graphics keme basta mga default jan
-  GameTile[] gt;
+        //initialization for field variable
+        public GameTile(Texture2D tileTexture, Rectangle tileDisplay, Rectangle tileSource, Color tileColor)
+        {
+            this.tileTexture = tileTexture;
+            this.tileDisplay = tileDisplay;
+            this.tileSource = tileSource;
+            this.tileColor = tileColor;
+        }
 
-  sa initialize():
-  Texture2D tileTexture = Content.Load<Texture2d>("Platform 2")
-  Rectangle tileDisplay = new Rectangle (0, WindowsClientHeight- 40, 40, 40) = > nif not array
-  Rectangle tileSource = new rectangle (0, 0, tileTexture.width/6, tileTexture.height);
-  Color tileColor = Color.White;
-  int posX= 0;
-  gt = new GameTile(tileTexture, tileDisplay, tileSource, tileColor); => if not array
-  gt = new GameTile[2]; = sets ilan pwede ipakita
-  for (int i = 0; i <2; i++) = dapat same sa initialization kung ilan
-
-  gt = new List<GameTile>();
-  {
-    Rectangle tileDisplay = newRectangle (posX, windows.clientboundheight- 40, 40, 40);
-    gt[i]= new GameTile(tileTexture, tieleDisplay, tileSource, tileColor)
-    gt.Add(new Gametile(tileTexture,tieleDisplay, tileSource, tileColor))
-    posX += 40;
-  }
-  player = new  Player (contentload eme)
-
-  base.Initialize()
-
-
-sa update:
-
-  sa draw:
-  _spriteBatch.Begin();
-  forach (GameTile in gt){
-  _spriteBatch.Draw(gt.Tiletexture, gt.TileDisplay, gt.TileSource, gt.Tile) => not array
-    _spriteBatch.Draw(tile.Tiletexture, tile.TileDisplay, tile.TileSource, tile.Tile) => not array
-  }
- _spriteBatch.Draw(player.Playertecture, playerrect, playercolor)
-}
-
-
-
-
-player.cs
-
-internal class Player{
-Texture2D playerTexture;
-Rectangle playerRectangle;
-Color playerColor; generate constructor from members; encapsulate fields but dont use property smth
-
-public GameTile (Texture2D tileTexture, Rectangle tileDIsplay, Rectangle tileSource, Color tileColor ){ => initialization
-      this.tileTexture= tileTexture;
-      this. blabla
-    }
-
-    public Texture2D TileTexture{
-      get = > blabla
+        public Texture2D TileTexture { get => tileTexture;  }
+        public Rectangle TileDisplay { get => tileDisplay;  }
+        public Rectangle TileSource { get => tileSource;  }
+        public Color TileColor { get => tileColor;  }
     }
 }
